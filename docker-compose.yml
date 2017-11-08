@@ -11,6 +11,7 @@ services:
         - ${PROJECT_APP_PATH}:/app
         - ./logs/nginx/:/var/log/nginx
         - ./volumes/nginx/:/volumes/nginx/
+        - ./volumes/nginx/nginx.conf:/etc/nginx/nginx.conf
     environment:
         - VIRTUAL_PORT=${VIRTUAL_PORT}
         - VIRTUAL_HOST=${VIRTUAL_HOST}
@@ -49,9 +50,3 @@ networks:
   nginx-proxy:
     external:
       name: nginx-proxy
-
-
-#docker exec -it nginx-istore /bin/sh
-#docker-compose
-# docker-compose exec mysql-root mysqldump -u ${PROJECT_PREFIX}_user -h 0.0.0.0 --password=inalan_password inalan_db  > dump.sql
-# cat wp_easternpeak.sql | docker-compose exec mysql-root mysql -u inalan_user -h 0.0.0.0 --password=inalan_password inalan_db
