@@ -27,28 +27,37 @@ This is a sample for quick-automated building application
  go to sample-for-nginxproxy, rename .env.dist to .env and change all environment variables on your own
  as example
  ### Application's path (absolute or relative)
+ 
  PROJECT_APP_PATH=./../../sites/example/
  
- ###Project prefix
+ 
+ ###Project prefix 
+ 
  PROJECT_PREFIX=example
  
+ 
  ###Nginx proxy
+ 
  VIRTUAL_PORT=80 \
  VIRTUAL_HOST=example-docker.local \
  VIRTUAL_NETWORK=nginx-proxy 
  
  
  ###php settings
+ 
  PHP_BUILD_PATH=./phpfpm
  
+ 
  ###MySQL
+ 
  MYSQL_ROOT_PASSWORD=pass \
  MYSQL_DATABASE=dbname \
  MYSQL_USER=root1 \
- MYSQL_PASSWORD=pass \
+ MYSQL_PASSWORD=pass 
  
  ###open port 
- MYSQL_PORT=33065\
+ 
+ MYSQL_PORT=33065
  
  
  Change Dockerfile for phpfpm , located in ./phpfpm
