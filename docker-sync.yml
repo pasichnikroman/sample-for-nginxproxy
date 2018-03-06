@@ -1,0 +1,7 @@
+version: "2"
+# docker-sync.yml
+syncs:
+# this name has to be unique and is used in docker-compose.yml as well
+  data-sync:
+    src: ${PROJECT_APP_PATH} # the directory on the host system
+    sync_strategy: 'unison' 

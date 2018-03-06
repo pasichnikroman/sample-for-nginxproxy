@@ -1,0 +1,72 @@
+version: "2"
+services:
+  nginx:
+    restart: always
+    container_name: nginx-${PROJECT_PREFIX}
+    build: nginx
+    networks:
+        - backend
+        - nginx-proxy
+    volumes:
+        - ${PROJECT_APP_PATH}:/app
+        - ./logs/nginx/:/var/log/nginx
+        - ./volumes/nginx/:/volumes/nginx/
+        - ./volumes/nginx/nginx.conf:/etc/nginx/nginx.conf
+    environment:
+        - VIRTUAL_PORT=${VIRTUAL_PORT}
+        - VIRTUAL_HOST=${VIRTUAL_HOST}
+        - VIRTUAL_NETWORK=${VIRTUAL_NETWORK}
+        - PHPFPM_ENV=phpfpm-${PROJECT_PREFIX}
+    command: bash -c "/usr/local/bin/envtpl -in /volumes/nginx/templates/default_nginx.tpl > /etc/nginx/sites-available/default.conf && nginx"
+  phpfpm:
+    restart: always
+    build: ${PHP_BUILD_PATH}
+    container_name: phpfpm-${PROJECT_PREFIX}
+    volumes:
+      - data-sync:/app:rw # will be mounted on /data
+    networks:
+      - backend
+      - nginx-proxy
+  mysql:
+    restart: always
+    ports:
+      - ${MYSQL_PORT}:3306
+    image: mysql:5.7
+    container_name: mysql-${PROJECT_PREFIX}
+    environment:
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+      MYSQL_RANDOM_ROOT_PASSWORD: "no"
+    networks:
+      - backend
+    volumes:
+      - ./volumes/dumps/:/app
+      - ./.data/db:/var/lib/mysql
+
+networks:
+  backend:
+    driver: bridge
+  nginx-proxy:
+    external:
+      name: nginx-proxy
+
+
+# container name from docker-sync.yml
+volumes:
+  data-sync:
+    external: true
+
+# install unison or rsync
+#brew install unison
+#brew install rsync
+
+# install fswatch to check for file changes
+#brew install fswatch
+
+# install docker-sync
+#gem install docker-sync
+
+#docker-sync start
